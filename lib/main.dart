@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_try_new_feature/new_feature_list_page.dart';
+import 'package:flutter_try_new_feature/constant/const_route.dart';
+import 'package:flutter_try_new_feature/feature_list_page.dart';
+import 'package:flutter_try_new_feature/page/selected_panel_images_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,10 +24,16 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const MyHomePage(title: '新機能の試し実装'),
+      routes: {
+        ConstRoute.featureListRoute : (context) => const FeatureListPage(),
+        ConstRoute.selectImagePanelRoute : (context) => const SelectedImagePanelPage(),
+        ConstRoute.useGoogleMapRoute : (context) => const SelectedImagePanelPage(),
+      },
     );
   }
 }
 
+/// 初期画面
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
   final String title;
@@ -64,11 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const NewFeatureListPage(),
-                  ),
-                );
+                Navigator.of(context).pushNamed(ConstRoute.featureListRoute);
               },
               child: const Text('新機能リスト一覧へ遷移'),
             ),
