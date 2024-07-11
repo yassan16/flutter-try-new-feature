@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_try_new_feature/constant/const_route.dart';
 import 'package:flutter_try_new_feature/feature_list_page.dart';
+import 'package:flutter_try_new_feature/page/flutter_map_page.dart';
 import 'package:flutter_try_new_feature/page/selected_panel_images_page.dart';
 
 void main() {
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
       routes: {
         ConstRoute.featureListRoute : (context) => const FeatureListPage(),
         ConstRoute.selectImagePanelRoute : (context) => const SelectedImagePanelPage(),
-        ConstRoute.useGoogleMapRoute : (context) => const SelectedImagePanelPage(),
+        ConstRoute.useFlutterMapRoute : (context) => const FlutterMapPage(),
       },
     );
   }

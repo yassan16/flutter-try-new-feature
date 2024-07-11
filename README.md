@@ -1,16 +1,11 @@
-# flutter_try_new_feature
+# 概要
+このアプリはFlutterの習熟を目的として、さまざまな機能を実装してみるアプリです。
 
-A new Flutter project.
+## 機能一覧
+### Stackを用いたWidgetの重複
+StackによるWidgetの重複を行うことで、画像に存在するボタンを押しているように見えます。
 
-## Getting Started
+### Flutter Map
+Flutter Mapを実際に触って、地図機能を試します。
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### 

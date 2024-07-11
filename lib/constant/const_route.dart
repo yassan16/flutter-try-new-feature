@@ -4,5 +4,5 @@ class ConstRoute {
   // 画像パネル選択
   static const String selectImagePanelRoute = "/selectImagePanel";
   // GoogleMap
-  static const String useGoogleMapRoute = "/useGoogleMapRoute";
+  static const String useFlutterMapRoute = "/useFlutterMapRoute";
 }
