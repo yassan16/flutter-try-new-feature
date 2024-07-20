@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
       routes: {
         ConstRoute.featureListRoute : (context) => const FeatureListPage(),
         ConstRoute.selectImagePanelRoute : (context) => const SelectedImagePanelPage(),
-        ConstRoute.divideImageAreaRoute : (context) => const DivideImageAreaPage(),
+        ConstRoute.inputFormListRoute : (context) => const InputFormListPage(),
         ConstRoute.useFlutterMapRoute : (context) => const FlutterMapPage(),
         ConstRoute.useGeolocatorRoute : (context) => const GetCurrentLocationPage(),
       },
