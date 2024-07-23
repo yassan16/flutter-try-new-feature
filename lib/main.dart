@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_try_new_feature/constant/const_route.dart';
 import 'package:flutter_try_new_feature/feature_list_page.dart';
-import 'package:flutter_try_new_feature/page/divide_image_area_page.dart';
+import 'package:flutter_try_new_feature/page/input_form_list_page.dart';
 import 'package:flutter_try_new_feature/page/flutter_map_page.dart';
 import 'package:flutter_try_new_feature/page/get_currentLocation_page.dart';
 import 'package:flutter_try_new_feature/page/selected_panel_images_page.dart';

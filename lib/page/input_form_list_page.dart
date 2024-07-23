@@ -1,6 +1,9 @@
+import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
+
 import 'package:flutter_try_new_feature/constant/const_setting.dart';
 
 // 実装中
@@ -14,9 +17,12 @@ class InputFormListPage extends StatefulWidget {
 class _InputFormListPageState extends State<InputFormListPage> {
   late TextEditingController _textEditingcontroller;
 
+  // 入力したテキスト
   String _inputText = "未入力";
-
+  // 選択したセグメント
   String _segment = "1";
+  // 選択した日時
+  String _selectedDateTime = "";
 
 
   @override
@@ -53,7 +59,10 @@ class _InputFormListPageState extends State<InputFormListPage> {
           child: Column(children: [
             makeTextFormField(),
             makeDivider(),
-            makeSlidingSegmented(),
+            slidingSegmented(),
+            makeDivider(),
+            drumRollDateTime(),
+            makeDivider(),
           ],),
         ),
 
@@ -143,7 +152,7 @@ class _InputFormListPageState extends State<InputFormListPage> {
   }
 
   /// スライドセグメント
-  Widget makeSlidingSegmented(){
+  Widget slidingSegmented(){
     // Containerのサイズを親ウェジェットのサイズとの比率で設定
     return FractionallySizedBox(
       widthFactor: 1,
@@ -157,8 +166,10 @@ class _InputFormListPageState extends State<InputFormListPage> {
         },
         children: {
           for (final segment in ["1", "2", "3"])
-            segment: Padding(
-              padding: const EdgeInsets.all(5),
+            segment: Container(
+              height: 40,
+              // 文字を中央に配置
+              alignment: Alignment.center,
               child: Text(
                 segment,
                 style: TextStyle(
@@ -168,5 +179,52 @@ class _InputFormListPageState extends State<InputFormListPage> {
         },
       ),
     );
+  }
+
+  /// ドラムロールでの日時選択
+  Widget drumRollDateTime(){
+
+    DateTime nowDateTime = DateTime.now();
+
+    return
+      Container(
+        child: Column(
+          children: [
+            // 選択した日時
+            Text(_selectedDateTime),
+            // 選択ボタン
+            TextButton(
+              onPressed: () {
+                DatePicker.showDateTimePicker(context,
+                  // キャンセル・完了ボタンの表示
+                  showTitleActions: true,
+                  minTime: DateTime(nowDateTime.year, nowDateTime.month -1, nowDateTime.day),
+                  maxTime: DateTime(nowDateTime.year, nowDateTime.month +1, nowDateTime.day),
+                  onChanged: (date) {
+                    print("=====変更中=====");
+                    print(date);
+                  },
+                  onConfirm: (date) {
+                    setState(() {
+                      // フォーマットを変更して表示
+                      _selectedDateTime = DateFormat("yyyy-MM-dd HH:mm:ss").format(date);
+                    });
+                    print("=====完了=====");
+                    print(_selectedDateTime);
+                  },
+                  // 初期値
+                  currentTime: nowDateTime,
+                  locale: LocaleType.jp
+                );
+              },
+              child: const Text(
+                '日付+時間を選択',
+                style: TextStyle(color: Colors.blue),
+              ),
+            ),
+          ],
+        ),
+      );
+
   }
 }
