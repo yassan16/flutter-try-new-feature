@@ -23,6 +23,9 @@ class _InputFormListPageState extends State<InputFormListPage> {
   String _segment = "1";
   // 選択した日時
   String _selectedDateTime = "";
+  // トグルスイッチのON/OFF
+  bool _switchLightValue = true;
+  bool _switchDarkValue = false;
 
 
   @override
@@ -56,14 +59,17 @@ class _InputFormListPageState extends State<InputFormListPage> {
         Container(
           width: MediaQuery.of(context).size.width * 0.9,
           margin: EdgeInsets.only(top: 20),
-          child: Column(children: [
-            makeTextFormField(),
-            makeDivider(),
-            slidingSegmented(),
-            makeDivider(),
-            drumRollDateTime(),
-            makeDivider(),
-          ],),
+          child: SingleChildScrollView(
+            child: Column(children: [
+              makeTextFormField(),
+              makeDivider(),
+              slidingSegmented(),
+              makeDivider(),
+              iOSCupertinoSwitch(),
+              makeDivider(),
+              drumRollDateTime(),
+            ],),
+          ),
         ),
 
         // 右側の余白
@@ -225,6 +231,77 @@ class _InputFormListPageState extends State<InputFormListPage> {
           ],
         ),
       );
+
+  }
+
+  /// iOS風トグルスイッチ
+  Widget iOSCupertinoSwitch(){
+    return
+    Container(
+      width: double.infinity,
+      height: 120,
+      padding: EdgeInsets.only(
+        left: MediaQuery.of(context).size.width * 0.05,
+        right: MediaQuery.of(context).size.width * 0.05,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(10)
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // アイコン
+              Icon(
+                Icons.light_mode,
+                color: (_switchLightValue)? Colors.orange : Colors.black,
+                size: 30.0,
+              ),
+              // トグルスイッチ
+              CupertinoSwitch(
+                value: _switchLightValue,
+                activeColor: CupertinoColors.activeGreen,
+                onChanged: (bool? value) {
+                  setState(() {
+                    print(value);
+                    _switchLightValue = value ?? false;
+                    _switchDarkValue = !_switchLightValue;
+                  });
+                },
+              ),
+            ],
+          ),
+          Divider(thickness: 1,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // アイコン
+              Icon(
+                Icons.dark_mode,
+                color: (_switchDarkValue)? Colors.yellowAccent[700] : Colors.black,
+                size: 30.0,),
+              // トグルスイッチ
+              CupertinoSwitch(
+                value: _switchDarkValue,
+                activeColor: CupertinoColors.activeBlue,
+                onChanged: (bool? value) {
+                  setState(() {
+                    print(value);
+                    _switchDarkValue = value ?? false;
+                    _switchLightValue = !_switchDarkValue;
+                  });
+                },
+              ),
+            ],
+          ),
+
+        ],
+      ),
+
+    );
 
   }
 }
