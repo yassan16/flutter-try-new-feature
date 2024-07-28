@@ -1,10 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_try_new_feature/constant/const_route.dart';
-import 'package:flutter_try_new_feature/feature_list_page.dart';
-import 'package:flutter_try_new_feature/page/input_form_list_page.dart';
-import 'package:flutter_try_new_feature/page/flutter_map_page.dart';
-import 'package:flutter_try_new_feature/page/get_currentLocation_page.dart';
-import 'package:flutter_try_new_feature/page/selected_panel_images_page.dart';
+import 'package:flutter_try_new_feature/app_router.dart';
+import 'package:go_router/go_router.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -15,8 +13,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
+    return MaterialApp.router(
+      routerConfig: appRouter,
       theme: ThemeData(
         // appBarの色をアプリ全体で統一
         appBarTheme: const AppBarTheme(
@@ -26,68 +24,150 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: '新機能の試し実装'),
-      routes: {
-        ConstRoute.featureListRoute : (context) => const FeatureListPage(),
-        ConstRoute.selectImagePanelRoute : (context) => const SelectedImagePanelPage(),
-        ConstRoute.inputFormListRoute : (context) => const InputFormListPage(),
-        ConstRoute.useFlutterMapRoute : (context) => const FlutterMapPage(),
-        ConstRoute.useGeolocatorRoute : (context) => const GetCurrentLocationPage(),
-      },
     );
+
   }
 }
 
-/// 初期画面
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
 
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
+/// Widget for the root/initial pages in the bottom navigation bar.
+class RootScreen extends StatelessWidget {
+  /// Creates a RootScreen
+  const RootScreen({
+    required this.label,
+    required this.detailsPath,
+    this.secondDetailsPath,
+    super.key,
+  });
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  /// The label
+  final String label;
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+  /// The path to the detail page
+  final String detailsPath;
+
+  /// The path to another detail page
+  final String? secondDetailsPath;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          widget.title,
-        ),
+        title: Text('Root of section $label'),
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            ElevatedButton(
+            Text('Screen $label',
+                style: Theme.of(context).textTheme.titleLarge),
+            const Padding(padding: EdgeInsets.all(4)),
+            TextButton(
               onPressed: () {
-                Navigator.of(context).pushNamed(ConstRoute.featureListRoute);
+                GoRouter.of(context).go(detailsPath, extra: '$label-XYZ');
               },
-              child: const Text('新機能リスト一覧へ遷移'),
+              child: const Text('View details'),
             ),
+            const Padding(padding: EdgeInsets.all(4)),
+            if (secondDetailsPath != null)
+              TextButton(
+                onPressed: () {
+                  GoRouter.of(context).go(secondDetailsPath!);
+                },
+                child: const Text('View more details'),
+              ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+    );
+  }
+}
+
+
+/// The details screen for either the A or B screen.
+class DetailsScreen extends StatefulWidget {
+  /// Constructs a [DetailsScreen].
+  const DetailsScreen({
+    required this.label,
+    this.param,
+    this.extra,
+    this.withScaffold = true,
+    super.key,
+  });
+
+  /// The label to display in the center of the screen.
+  final String label;
+
+  /// Optional param
+  final String? param;
+
+  /// Optional extra object
+  final Object? extra;
+
+  /// Wrap in scaffold
+  final bool withScaffold;
+
+  @override
+  State<StatefulWidget> createState() => DetailsScreenState();
+}
+
+
+/// The state for DetailsScreen
+class DetailsScreenState extends State<DetailsScreen> {
+  int _counter = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.withScaffold) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Details Screen - ${widget.label}'),
+        ),
+        body: _build(context),
+      );
+    } else {
+      return ColoredBox(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        child: _build(context),
+      );
+    }
+  }
+
+  Widget _build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Text('Details for ${widget.label} - Counter: $_counter',
+              style: Theme.of(context).textTheme.titleLarge),
+          const Padding(padding: EdgeInsets.all(4)),
+          TextButton(
+            onPressed: () {
+              setState(() {
+                _counter++;
+              });
+            },
+            child: const Text('Increment counter'),
+          ),
+          const Padding(padding: EdgeInsets.all(8)),
+          if (widget.param != null)
+            Text('Parameter: ${widget.param!}',
+                style: Theme.of(context).textTheme.titleMedium),
+          const Padding(padding: EdgeInsets.all(8)),
+          if (widget.extra != null)
+            Text('Extra: ${widget.extra!}',
+                style: Theme.of(context).textTheme.titleMedium),
+          if (!widget.withScaffold) ...<Widget>[
+            const Padding(padding: EdgeInsets.all(16)),
+            TextButton(
+              onPressed: () {
+                GoRouter.of(context).pop();
+              },
+              child: const Text('< Back',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+            ),
+          ]
+        ],
       ),
     );
   }

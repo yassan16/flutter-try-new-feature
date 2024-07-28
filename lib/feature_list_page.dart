@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_try_new_feature/constant/const_route.dart';
 import 'package:flutter_try_new_feature/page/selected_panel_images_page.dart';
+import 'package:go_router/go_router.dart';
 
 class FeatureListPage extends StatelessWidget {
   const FeatureListPage({super.key});
@@ -23,25 +24,25 @@ class FeatureListPage extends StatelessWidget {
             titleIcon: Icon(Icons.grid_on),
             mainTitle: "画像パネル選択",
             subtitle: "画像をパネル分割して、パネルを押下できるようにする",
-            routePath: ConstRoute.selectImagePanelRoute,
+            routePath: "${ConstRoute.featureListRoute}/${ConstRoute.selectImagePanelRoute}",
           ),
           _menuItem(context,
             titleIcon: Icon(Icons.checklist_rtl),
             mainTitle: "入力フォーム集",
             subtitle: "入力フォームを試す",
-            routePath: ConstRoute.inputFormListRoute,
+            routePath: "${ConstRoute.featureListRoute}/${ConstRoute.inputFormListRoute}",
           ),
           _menuItem(context,
             titleIcon: Icon(Icons.map),
             mainTitle: "FlutterMap",
             subtitle: "FlutterMapで位置情報を取得する",
-            routePath: ConstRoute.useFlutterMapRoute,
+            routePath: "${ConstRoute.featureListRoute}/${ConstRoute.useFlutterMapRoute}",
           ),
           _menuItem(context,
             titleIcon: Icon(Icons.map),
             mainTitle: "現在地取得",
             subtitle: "geolocatorで現在地を取得する",
-            routePath: ConstRoute.useGeolocatorRoute,
+            routePath: "${ConstRoute.featureListRoute}/${ConstRoute.useGeolocatorRoute}",
           ),
         ],
       ),
@@ -70,7 +71,7 @@ class FeatureListPage extends StatelessWidget {
           style: TextStyle(fontSize: 11,)
         ),
         onTap: () {
-          Navigator.of(context).pushNamed(routePath);
+          GoRouter.of(context).go(routePath);
         },
         onLongPress: () {
           print("onLongPress called.");
