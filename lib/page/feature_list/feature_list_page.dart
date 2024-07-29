@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_try_new_feature/constant/const_route.dart';
-import 'package:flutter_try_new_feature/page/selected_panel_images_page.dart';
+import 'package:flutter_try_new_feature/page/feature_list/selected_panel_images_page.dart';
 import 'package:go_router/go_router.dart';
 
 class FeatureListPage extends StatelessWidget {

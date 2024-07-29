@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_try_new_feature/constant/const_route.dart';
-import 'package:flutter_try_new_feature/feature_list_page.dart';
+import 'package:flutter_try_new_feature/page/feature_list/feature_list_page.dart';
 import 'package:flutter_try_new_feature/main.dart';
-import 'package:flutter_try_new_feature/page/flutter_map_page.dart';
-import 'package:flutter_try_new_feature/page/get_currentLocation_page.dart';
-import 'package:flutter_try_new_feature/page/input_form_list_page.dart';
-import 'package:flutter_try_new_feature/page/selected_panel_images_page.dart';
+import 'package:flutter_try_new_feature/page/feature_list/flutter_map_page.dart';
+import 'package:flutter_try_new_feature/page/feature_list/get_currentLocation_page.dart';
+import 'package:flutter_try_new_feature/page/feature_list/input_form_list_page.dart';
+import 'package:flutter_try_new_feature/page/feature_list/selected_panel_images_page.dart';
 import 'package:go_router/go_router.dart';
 
 
