@@ -6,6 +6,7 @@ import 'package:flutter_try_new_feature/page/feature_list/flutter_map_page.dart'
 import 'package:flutter_try_new_feature/page/feature_list/get_currentLocation_page.dart';
 import 'package:flutter_try_new_feature/page/feature_list/input_form_list_page.dart';
 import 'package:flutter_try_new_feature/page/feature_list/selected_panel_images_page.dart';
+import 'package:flutter_try_new_feature/page/pokemon_picturebook/top.dart';
 import 'package:go_router/go_router.dart';
 
 
@@ -34,6 +35,7 @@ final GlobalKey<NavigatorState> _sectionANavigatorKey =
               GoRoute(
                 // The screen to display as the root in the first tab of the
                 // bottom navigation bar.
+                // feature_list へのパス
                 path: ConstRoute.featureListRoute,
                 builder: (BuildContext context, GoRouterState state) =>
                     const FeatureListPage(),
@@ -122,25 +124,24 @@ final GlobalKey<NavigatorState> _sectionANavigatorKey =
               GoRoute(
                 // The screen to display as the root in the third tab of the
                 // bottom navigation bar.
-                path: '/c',
+                path: ConstRoute.pokemonPictureBookRoute,
                 builder: (BuildContext context, GoRouterState state) =>
-                    const RootScreen(
-                  label: 'C',
-                  detailsPath: '/c/details',
-                ),
+                  const PokemonPictureBookTop(),
                 routes: <RouteBase>[
-                  GoRoute(
-                    path: 'details',
-                    builder: (BuildContext context, GoRouterState state) =>
-                        DetailsScreen(
-                      label: 'C',
-                      extra: state.extra,
-                    ),
-                  ),
+                  //TODO 一時的にコメントアウト
+                  // GoRoute(
+                  //   path: 'details',
+                  //   builder: (BuildContext context, GoRouterState state) =>
+                  //       DetailsScreen(
+                  //     label: 'C',
+                  //     extra: state.extra,
+                  //   ),
+                  // ),
                 ],
               ),
             ],
           ),
+
         ],
       ),
     ],
@@ -171,7 +172,7 @@ class ScaffoldWithNavBar extends StatelessWidget {
           BottomNavigationBarItem(icon: Icon(Icons.checklist_rtl), label: 'Feature List'),
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Section A'),
           BottomNavigationBarItem(icon: Icon(Icons.work), label: 'Section B'),
-          BottomNavigationBarItem(icon: Icon(Icons.tab), label: 'Section C'),
+          BottomNavigationBarItem(icon: Icon(Icons.catching_pokemon), label: 'Section C'),
         ],
         // Itemが4つ以上の場合、ホワイトアウトするので対策
         type: BottomNavigationBarType.fixed,
