@@ -32,12 +32,9 @@ class _PokemonPictureBookTopState extends State<PokemonPictureBookTop> {
   @override
   void initState(){
     super.initState();
-    // ここに非同期処理を入れると初期画面でステートを適応できる
-
-    getGenerationApiUrl();
-
   }
 
+  /// 世代データ取得APIのURL
   Future<void> getGenerationApiUrl() async {
 
     // 全世代ごとのAPI呼び出しURLを取得
@@ -58,7 +55,11 @@ class _PokemonPictureBookTopState extends State<PokemonPictureBookTop> {
 
   }
 
+  /// 世代ごとのポケモンデータ取得
   Future<Map> getInitGenePokemonData(int geneInt) async {
+
+    // TODO すでにMapに世代ポケモンデータがある場合は、読み込まずに既にあるデータを返す
+
     // 世代１のポケモン画像を初期データとして読み込む
     var allGene1 = await callPokeApi.getPokemonFromGeneration("${geneInt}");
     List<int> tmpResultList = [];
@@ -76,6 +77,7 @@ class _PokemonPictureBookTopState extends State<PokemonPictureBookTop> {
     }
     print("===");
     print("${tmpList[0]["id"]} :${tmpList[0]["name"]}");
+    // TODO 世代ごとにMapに保存する
     _selectedGenePokemonIdListMap["1"] = tmpList;
 
     return _selectedGenePokemonIdListMap;
@@ -130,6 +132,7 @@ class _PokemonPictureBookTopState extends State<PokemonPictureBookTop> {
                   crossAxisSpacing: 20.0,
                   mainAxisSpacing: 10.0,
                   children: [
+                    // TODO 世代数に変更する
                     for(Map tmpMap in resultMap["1"]!)
                       Container(
                         child: Image.network(tmpMap["sprites"]["front_default"]),
@@ -139,6 +142,7 @@ class _PokemonPictureBookTopState extends State<PokemonPictureBookTop> {
               ),
             );
           } else {
+            // 読み込み中インジケーターを表示させる
             children.add(
               const Center(
                 child: SizedBox(
