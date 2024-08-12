@@ -27,7 +27,7 @@ class _PokemonPictureBookTopState extends State<PokemonPictureBookTop> {
 
   // listの要素数は表示数と1ずれるので注意
   // 選択したChoiceChipの値
-  int? _selectedChoiceChipValue;
+  int? _selectedChoiceChipValue = 0;
 
   @override
   void initState(){
@@ -58,9 +58,9 @@ class _PokemonPictureBookTopState extends State<PokemonPictureBookTop> {
 
   }
 
-  Future<Map> getInitGenePokemonData() async {
+  Future<Map> getInitGenePokemonData(int geneInt) async {
     // 世代１のポケモン画像を初期データとして読み込む
-    var allGene1 = await callPokeApi.getPokemonFromGeneration("1");
+    var allGene1 = await callPokeApi.getPokemonFromGeneration("${geneInt}");
     List<int> tmpResultList = [];
     for (Map map in allGene1["pokemon_species"]) {
       // "/"で区切って最後のidを取得
@@ -93,33 +93,68 @@ class _PokemonPictureBookTopState extends State<PokemonPictureBookTop> {
         ),
       ),
       body: FutureBuilder(
-        future: getInitGenePokemonData(),
+        future: getInitGenePokemonData(_selectedChoiceChipValue! + 1),
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-
-          if(snapshot.hasData){
+          List<Widget> children = [];
+          // 世代選択
+          children.add(
+            Wrap(
+              spacing: 5.0,
+              children: List<Widget>.generate(
+                // TODO 世代取得APIのcount数にする
+                9,
+                (int index) {
+                  int displayIndex = index + 1;
+                  return ChoiceChip(
+                    label: Text('Item $displayIndex'),
+                    selected: _selectedChoiceChipValue == index,
+                    onSelected: (bool selected) {
+                      setState(() {
+                        _selectedChoiceChipValue = selected ? index : null;
+                      });
+                    },
+                  );
+                },
+              ).toList(),
+            ),
+          );
+          // データの有無によりWidgetを切り替え
+          if(snapshot.connectionState == ConnectionState.done){
             Map<String, List<Map>> resultMap = snapshot.data;
-
-            return GridView.count(
-              crossAxisCount: 3,
-              crossAxisSpacing: 20.0,
-              mainAxisSpacing: 10.0,
-              children: [
-                for(Map tmpMap in resultMap["1"]!)
-                  Container(
-                    child: Image.network(tmpMap["sprites"]["front_default"]),
-                  ),
-              ],
-            );
-          } else {
-            return Center(
-              child: SizedBox(
-                width: 60,
-                height: 60,
-                child: CircularProgressIndicator(),
+            children.add(
+              // スクロールさせる
+              Expanded(
+                child: GridView.count(
+                  shrinkWrap: true,
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 20.0,
+                  mainAxisSpacing: 10.0,
+                  children: [
+                    for(Map tmpMap in resultMap["1"]!)
+                      Container(
+                        child: Image.network(tmpMap["sprites"]["front_default"]),
+                      ),
+                  ],
+                ),
               ),
             );
-
+          } else {
+            children.add(
+              const Center(
+                child: SizedBox(
+                  width: 60,
+                  height: 60,
+                  child: CircularProgressIndicator(),
+                ),
+              )
+            );
           }
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: children,
+            ),
+          );
         },
 
       ),
