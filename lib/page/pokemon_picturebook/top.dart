@@ -27,6 +27,7 @@ class _PokemonPictureBookTopState extends State<PokemonPictureBookTop> {
 
   // listの要素数は表示数と1ずれるので注意
   // 選択したChoiceChipの値
+  // 初期値は第1世代
   int? _selectedChoiceChipValue = 0;
 
   @override
@@ -56,31 +57,35 @@ class _PokemonPictureBookTopState extends State<PokemonPictureBookTop> {
   }
 
   /// 世代ごとのポケモンデータ取得
-  Future<Map> getInitGenePokemonData(int geneInt) async {
+  Future<List> getGenePokemonData(int geneInt) async {
 
-    // TODO すでにMapに世代ポケモンデータがある場合は、読み込まずに既にあるデータを返す
+    String strGeneInt = geneInt.toString();
 
-    // 世代１のポケモン画像を初期データとして読み込む
-    var allGene1 = await callPokeApi.getPokemonFromGeneration("${geneInt}");
-    List<int> tmpResultList = [];
-    for (Map map in allGene1["pokemon_species"]) {
-      // "/"で区切って最後のidを取得
-      List<String> tmpList = map["url"].split("/");
-      tmpResultList.add(int.parse(tmpList[tmpList.length - 2]));
+    // 既にMapに世代ポケモンデータがある場合は、読み込まずに既存データを返す
+    if(_selectedGenePokemonIdListMap[strGeneInt] == null){
+      // 世代データ取得
+      var allGene1 = await callPokeApi.getPokemonFromGeneration(strGeneInt);
+      // 世代のポケモンidリスト
+      List<int> tmpResultList = [];
+      for (Map map in allGene1["pokemon_species"]) {
+        // "/"で区切って最後のidを取得
+        List<String> tmpList = map["url"].split("/");
+        tmpResultList.add(int.parse(tmpList[tmpList.length - 2]));
+      }
+      tmpResultList.sort();
+
+      // 世代マップとポケモンの紐付け
+      List<Map> tmpList = [];
+      for(int i in tmpResultList) {
+        tmpList.add(await callPokeApi.getPokemon(id: "${i}"));
+      }
+      print("===");
+      print("${tmpList[0]["id"]} :${tmpList[0]["name"]}");
+      // 世代ごとにMapに保存する
+      _selectedGenePokemonIdListMap[strGeneInt] = tmpList;
     }
-    tmpResultList.sort();
 
-    // 世代マップとポケモンの紐付け
-    List<Map> tmpList = [];
-    for(int i in tmpResultList) {
-      tmpList.add(await callPokeApi.getPokemon(id: "${i}"));
-    }
-    print("===");
-    print("${tmpList[0]["id"]} :${tmpList[0]["name"]}");
-    // TODO 世代ごとにMapに保存する
-    _selectedGenePokemonIdListMap["1"] = tmpList;
-
-    return _selectedGenePokemonIdListMap;
+    return _selectedGenePokemonIdListMap[strGeneInt]!;
   }
 
   @override
@@ -95,7 +100,7 @@ class _PokemonPictureBookTopState extends State<PokemonPictureBookTop> {
         ),
       ),
       body: FutureBuilder(
-        future: getInitGenePokemonData(_selectedChoiceChipValue! + 1),
+        future: getGenePokemonData(_selectedChoiceChipValue! + 1),
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           List<Widget> children = [];
           // 世代選択
@@ -122,7 +127,7 @@ class _PokemonPictureBookTopState extends State<PokemonPictureBookTop> {
           );
           // データの有無によりWidgetを切り替え
           if(snapshot.connectionState == ConnectionState.done){
-            Map<String, List<Map>> resultMap = snapshot.data;
+            List<Map> resultMapList = snapshot.data;
             children.add(
               // スクロールさせる
               Expanded(
@@ -133,7 +138,8 @@ class _PokemonPictureBookTopState extends State<PokemonPictureBookTop> {
                   mainAxisSpacing: 10.0,
                   children: [
                     // TODO 世代数に変更する
-                    for(Map tmpMap in resultMap["1"]!)
+                    // List
+                    for(Map tmpMap in resultMapList)
                       Container(
                         child: Image.network(tmpMap["sprites"]["front_default"]),
                       ),
