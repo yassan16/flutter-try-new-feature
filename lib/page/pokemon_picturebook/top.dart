@@ -16,7 +16,7 @@ class _PokemonPictureBookTopState extends State<PokemonPictureBookTop> {
   CallPokeApi callPokeApi = CallPokeApi();
 
   // ChoiceChip(ゲームの世代)の要素数
-  late int _choiceChipCount;
+  int? _choiceChipCount;
 
   // 世代データ取得APIリスト
   List<String> _generationApiUrlList = [];
@@ -25,8 +25,8 @@ class _PokemonPictureBookTopState extends State<PokemonPictureBookTop> {
   // key:世代数 value:ポケモンidリスト
   Map<String, List<Map>> _selectedGenePokemonIdListMap = {};
 
-  // listの要素数は表示数と1ずれるので注意
   // 選択したChoiceChipの値
+  // listの要素数は表示数と1ずれるので注意
   // 初期値は第1世代
   int? _selectedChoiceChipValue = 0;
 
@@ -35,24 +35,33 @@ class _PokemonPictureBookTopState extends State<PokemonPictureBookTop> {
     super.initState();
   }
 
+  /// 表示ポケモンデータの取得
+  ///
+  /// FutureBuilder の呼び出しで使用する
+  Future<List> getDisplayPokemonData(int geneInt) async {
+
+    // nullなら世代数をセット
+    _choiceChipCount ??= await getGenerationApiUrl();
+
+    // 世代ポケモンデータの取得
+    return await getGenePokemonData(geneInt);
+
+  }
+
   /// 世代データ取得APIのURL
-  Future<void> getGenerationApiUrl() async {
+  Future<int> getGenerationApiUrl() async {
 
     // 全世代ごとのAPI呼び出しURLを取得
     var allGeneResponseJson  = await callPokeApi.getALLGenerationApiUrl();
-    print("===");
-    print(allGeneResponseJson);
-
-    // 世代数をセット
-    _choiceChipCount = allGeneResponseJson["count"];
 
     // 世代APIをステートにセット
     // Listの要素数を世代数として管理
     for (Map urlMap in allGeneResponseJson["results"]) {
       _generationApiUrlList.add(urlMap["url"]);
     }
-    print("===");
-    print(_generationApiUrlList);
+
+    // 世代数
+    return allGeneResponseJson["count"];
 
   }
 
@@ -61,7 +70,7 @@ class _PokemonPictureBookTopState extends State<PokemonPictureBookTop> {
 
     String strGeneInt = geneInt.toString();
 
-    // 既にMapに世代ポケモンデータがある場合は、読み込まずに既存データを返す
+    // Mapに既存の世代ポケモンデータが存在しない場合は、取得処理を実行する
     if(_selectedGenePokemonIdListMap[strGeneInt] == null){
       // 世代データ取得
       var allGene1 = await callPokeApi.getPokemonFromGeneration(strGeneInt);
@@ -100,7 +109,7 @@ class _PokemonPictureBookTopState extends State<PokemonPictureBookTop> {
         ),
       ),
       body: FutureBuilder(
-        future: getGenePokemonData(_selectedChoiceChipValue! + 1),
+        future: getDisplayPokemonData(_selectedChoiceChipValue! + 1),
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           List<Widget> children = [];
           // 世代選択
@@ -108,8 +117,8 @@ class _PokemonPictureBookTopState extends State<PokemonPictureBookTop> {
             Wrap(
               spacing: 5.0,
               children: List<Widget>.generate(
-                // TODO 世代取得APIのcount数にする
-                9,
+                // 世代数 nullの場合は1
+                _choiceChipCount ??= 1,
                 (int index) {
                   int displayIndex = index + 1;
                   return ChoiceChip(
@@ -137,8 +146,7 @@ class _PokemonPictureBookTopState extends State<PokemonPictureBookTop> {
                   crossAxisSpacing: 20.0,
                   mainAxisSpacing: 10.0,
                   children: [
-                    // TODO 世代数に変更する
-                    // List
+                    // ポケモンデータリスト
                     for(Map tmpMap in resultMapList)
                       Container(
                         child: Image.network(tmpMap["sprites"]["front_default"]),

@@ -6,6 +6,8 @@ import 'package:http/http.dart' as http;
 class CallPokeApi {
 
   /// ポケモンの取得
+  ///
+  /// https://pokeapi.co/docs/v2#pokemon
   Future<Map> getPokemon({required String id}) async {
     var url = Uri.https("pokeapi.co", "/api/v2/pokemon/${id}/");
     var response = await http.get(url);
@@ -14,6 +16,8 @@ class CallPokeApi {
   }
 
   /// 全世代の世代取得APIのURL取得
+  ///
+  /// https://pokeapi.co/docs/v2#resource-listspagination-section
   Future<Map> getALLGenerationApiUrl() async {
     // 全世代のAPIを呼ぶために、APIのURLを取得
     var url = Uri.https("pokeapi.co", "/api/v2/generation/");
