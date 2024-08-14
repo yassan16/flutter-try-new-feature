@@ -6,7 +6,8 @@ import 'package:flutter_try_new_feature/page/feature_list/flutter_map_page.dart'
 import 'package:flutter_try_new_feature/page/feature_list/get_currentLocation_page.dart';
 import 'package:flutter_try_new_feature/page/feature_list/input_form_list_page.dart';
 import 'package:flutter_try_new_feature/page/feature_list/selected_panel_images_page.dart';
-import 'package:flutter_try_new_feature/page/pokemon_picturebook/top.dart';
+import 'package:flutter_try_new_feature/page/pokemon_picturebook/pokemon_detail_description_page.dart';
+import 'package:flutter_try_new_feature/page/pokemon_picturebook/pokemon_generation_list_page.dart';
 import 'package:go_router/go_router.dart';
 
 
@@ -119,24 +120,19 @@ final GlobalKey<NavigatorState> _sectionANavigatorKey =
           ),
 
           // The route branch for the third tab of the bottom navigation bar.
+          // ポケモン図鑑
           StatefulShellBranch(
             routes: <RouteBase>[
               GoRoute(
-                // The screen to display as the root in the third tab of the
-                // bottom navigation bar.
                 path: ConstRoute.pokemonPictureBookRoute,
                 builder: (BuildContext context, GoRouterState state) =>
-                  const PokemonPictureBookTop(),
+                  const PokemonGenerationListPage(),
                 routes: <RouteBase>[
-                  //TODO 一時的にコメントアウト
-                  // GoRoute(
-                  //   path: 'details',
-                  //   builder: (BuildContext context, GoRouterState state) =>
-                  //       DetailsScreen(
-                  //     label: 'C',
-                  //     extra: state.extra,
-                  //   ),
-                  // ),
+                  GoRoute(
+                    path: 'details',
+                    builder: (BuildContext context, GoRouterState state) =>
+                        PokemonDetailDescriptionPage(),
+                  ),
                 ],
               ),
             ],

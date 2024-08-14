@@ -3,15 +3,15 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:flutter_try_new_feature/model/call_pokemon_api.dart';
 
-class PokemonPictureBookTop extends StatefulWidget {
-  const PokemonPictureBookTop({super.key});
+class PokemonGenerationListPage extends StatefulWidget {
+  const PokemonGenerationListPage({super.key});
 
   @override
-  State<PokemonPictureBookTop> createState() => _PokemonPictureBookTopState();
+  State<PokemonGenerationListPage> createState() => _PokemonGenerationListPageState();
 }
 
 
-class _PokemonPictureBookTopState extends State<PokemonPictureBookTop> {
+class _PokemonGenerationListPageState extends State<PokemonGenerationListPage> {
 
   CallPokeApi callPokeApi = CallPokeApi();
 
