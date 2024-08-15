@@ -129,7 +129,7 @@ final GlobalKey<NavigatorState> _sectionANavigatorKey =
                   const PokemonGenerationListPage(),
                 routes: <RouteBase>[
                   GoRoute(
-                    path: 'details',
+                    path: "detail",
                     builder: (BuildContext context, GoRouterState state) =>
                         PokemonDetailDescriptionPage(),
                   ),

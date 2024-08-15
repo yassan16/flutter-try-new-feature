@@ -10,7 +10,9 @@ class ConstRoute {
   // 現在地取得
   static const String useGeolocatorRoute = "use_geolocator";
 
-  // ポケモン図鑑Top
+  // ポケモン図鑑 リスト表示Top
   static const String pokemonPictureBookRoute = "/pokemon_picturebook";
+  // ポケモン図鑑 ポケモン詳細情報
+  static const String pokemonPictureBookDetailRoute = "/pokemon_picturebook/detail";
 
 }

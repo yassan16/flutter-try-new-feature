@@ -1,7 +1,9 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_try_new_feature/constant/const_route.dart';
 import 'package:flutter_try_new_feature/model/call_pokemon_api.dart';
+import 'package:go_router/go_router.dart';
 
 class PokemonGenerationListPage extends StatefulWidget {
   const PokemonGenerationListPage({super.key});
@@ -148,8 +150,13 @@ class _PokemonGenerationListPageState extends State<PokemonGenerationListPage> {
                   children: [
                     // ポケモンデータリスト
                     for(Map tmpMap in resultMapList)
-                      Container(
-                        child: Image.network(tmpMap["sprites"]["front_default"]),
+                      GestureDetector(
+	                      onTap: () {
+	                        GoRouter.of(context).go(ConstRoute.pokemonPictureBookDetailRoute);
+	                      },
+                        child: Container(
+                          child: Image.network(tmpMap["sprites"]["front_default"]),
+                      ),
                       ),
                   ],
                 ),

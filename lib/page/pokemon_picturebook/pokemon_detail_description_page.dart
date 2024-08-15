@@ -10,6 +10,18 @@ class PokemonDetailDescriptionPage extends StatefulWidget {
 class _PokemonDetailDescriptionPageState extends State<PokemonDetailDescriptionPage> {
   @override
   Widget build(BuildContext context) {
-    return Text("仮ページ");
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          "ポケモン詳細情報",
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+      ),
+      body: Center(
+        child: Text("仮ページ"),
+      ),
+    );
   }
 }
