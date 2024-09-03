@@ -8,7 +8,7 @@ class CallPokeApi {
   /// ポケモンの取得
   ///
   /// https://pokeapi.co/docs/v2#pokemon
-  Future<Map> getPokemon({required String id}) async {
+  Future<Map<String, dynamic>> getPokemon({required String id}) async {
     var url = Uri.https("pokeapi.co", "/api/v2/pokemon/${id}/");
     var response = await http.get(url);
     var responseJson = jsonDecode(response.body) as Map<String, dynamic>;

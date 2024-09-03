@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_try_new_feature/dto/pokemon.dart';
 
 class PokemonDetailDescriptionPage extends StatefulWidget {
-  const PokemonDetailDescriptionPage({super.key});
+  const PokemonDetailDescriptionPage({required this.pokemon, super.key});
+
+  final Pokemon pokemon;
 
   @override
   State<PokemonDetailDescriptionPage> createState() => _PokemonDetailDescriptionPageState();
@@ -20,7 +23,7 @@ class _PokemonDetailDescriptionPageState extends State<PokemonDetailDescriptionP
         ),
       ),
       body: Center(
-        child: Text("仮ページ"),
+        child: Text(widget.pokemon.name!),
       ),
     );
   }
