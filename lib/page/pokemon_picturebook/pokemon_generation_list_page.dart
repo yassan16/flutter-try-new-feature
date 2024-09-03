@@ -2,6 +2,7 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_try_new_feature/constant/const_route.dart';
+import 'package:flutter_try_new_feature/dto/pokemon.dart';
 import 'package:flutter_try_new_feature/model/call_pokemon_api.dart';
 import 'package:go_router/go_router.dart';
 
@@ -25,7 +26,7 @@ class _PokemonGenerationListPageState extends State<PokemonGenerationListPage> {
 
   // 選択している世代のポケモンidリスト
   // key:世代数 value:ポケモンidリスト
-  Map<String, List<Map>> _selectedGenePokemonIdListMap = {};
+  Map<String, List<Pokemon>> _selectedGenePokemonIdListMap = {};
 
   // 選択したChoiceChipの値
   // listの要素数は表示数と1ずれるので注意
@@ -77,23 +78,24 @@ class _PokemonGenerationListPageState extends State<PokemonGenerationListPage> {
       // 世代データ取得
       var allGene1 = await callPokeApi.getPokemonFromGeneration(strGeneInt);
       // 世代のポケモンidリスト
-      List<int> tmpResultList = [];
+      List<int> tmpPokemonIdList = [];
       for (Map map in allGene1["pokemon_species"]) {
         // "/"で区切って最後のidを取得
         List<String> tmpList = map["url"].split("/");
-        tmpResultList.add(int.parse(tmpList[tmpList.length - 2]));
+        tmpPokemonIdList.add(int.parse(tmpList[tmpList.length - 2]));
       }
-      tmpResultList.sort();
+      tmpPokemonIdList.sort();
 
       // 世代マップとポケモンの紐付け
-      List<Map> tmpList = [];
-      for(int i in tmpResultList) {
-        tmpList.add(await callPokeApi.getPokemon(id: "${i}"));
+      List<Pokemon> pokemonList= [];
+      for(int i in tmpPokemonIdList) {
+        Map<String, dynamic> resultPokemon = await callPokeApi.getPokemon(id: "${i}");
+        Pokemon p = Pokemon(resultPokemon);
+        pokemonList.add(p);
+        print(p.name);
       }
-      print("===");
-      print("${tmpList[0]["id"]} :${tmpList[0]["name"]}");
       // 世代ごとにMapに保存する
-      _selectedGenePokemonIdListMap[strGeneInt] = tmpList;
+      _selectedGenePokemonIdListMap[strGeneInt] = pokemonList;
     }
 
     return _selectedGenePokemonIdListMap[strGeneInt]!;
@@ -138,7 +140,7 @@ class _PokemonGenerationListPageState extends State<PokemonGenerationListPage> {
           );
           // データの有無によりWidgetを切り替え
           if(snapshot.connectionState == ConnectionState.done){
-            List<Map> resultMapList = snapshot.data;
+            List<Pokemon> resultPokemonList = snapshot.data;
             children.add(
               // スクロールさせる
               Expanded(
@@ -149,13 +151,14 @@ class _PokemonGenerationListPageState extends State<PokemonGenerationListPage> {
                   mainAxisSpacing: 10.0,
                   children: [
                     // ポケモンデータリスト
-                    for(Map tmpMap in resultMapList)
+                    for(Pokemon pokemon in resultPokemonList)
                       GestureDetector(
 	                      onTap: () {
-	                        GoRouter.of(context).go(ConstRoute.pokemonPictureBookDetailRoute);
+	                        GoRouter.of(context).go(ConstRoute.pokemonPictureBookDetailRoute, extra: pokemon);
 	                      },
                         child: Container(
-                          child: Image.network(tmpMap["sprites"]["front_default"]),
+                          // nullになることはないはず
+                          child: Image.network(pokemon.sprites!["front_default"]),
                       ),
                       ),
                   ],

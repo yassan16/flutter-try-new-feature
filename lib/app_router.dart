@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_try_new_feature/constant/const_route.dart';
+import 'package:flutter_try_new_feature/dto/pokemon.dart';
 import 'package:flutter_try_new_feature/page/feature_list/feature_list_page.dart';
 import 'package:flutter_try_new_feature/main.dart';
 import 'package:flutter_try_new_feature/page/feature_list/flutter_map_page.dart';
@@ -131,7 +132,7 @@ final GlobalKey<NavigatorState> _sectionANavigatorKey =
                   GoRoute(
                     path: "detail",
                     builder: (BuildContext context, GoRouterState state) =>
-                        PokemonDetailDescriptionPage(),
+                        PokemonDetailDescriptionPage(pokemon: state.extra! as Pokemon,),
                   ),
                 ],
               ),
