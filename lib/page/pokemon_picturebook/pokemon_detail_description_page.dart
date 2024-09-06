@@ -11,6 +11,15 @@ class PokemonDetailDescriptionPage extends StatefulWidget {
 }
 
 class _PokemonDetailDescriptionPageState extends State<PokemonDetailDescriptionPage> {
+
+  late final Pokemon _pokemon;
+
+  @override
+  void initState() {
+    super.initState();
+    _pokemon = widget.pokemon;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +32,7 @@ class _PokemonDetailDescriptionPageState extends State<PokemonDetailDescriptionP
         ),
       ),
       body: Center(
-        child: Text(widget.pokemon.name!),
+        child: Text(_pokemon.name),
       ),
     );
   }
