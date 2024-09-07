@@ -8,6 +8,7 @@ class Pokemon{
   // このポケモンの身長をデシメートルで表す
   late int height;
   // 各種ごとにデフォルトとして使用されるポケモンを1匹だけ設定する
+  // メガシンカやリージョンフォルムのポケモンを検索対象にするとfalse
   late bool isDefault;
   // 並べ替えの順序
   late int order;
@@ -18,7 +19,7 @@ class Pokemon{
   late List abilities;
   // このポケモンが取ることができる形態（外見上）の違い
   late List forms;
-  //
+  // 対象ポケモンが登場するゲームと、そのゲーム内でのインデックス（=恐らく図鑑の表示順序）の一覧
   late List gameIndices;
   // このポケモンが遭遇したときに持っている可能性のあるアイテムのリスト
   late List heldItems;

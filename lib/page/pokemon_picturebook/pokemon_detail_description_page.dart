@@ -31,9 +31,42 @@ class _PokemonDetailDescriptionPageState extends State<PokemonDetailDescriptionP
           ),
         ),
       ),
-      body: Center(
-        child: Text(_pokemon.name),
+      body: Column(
+        children: [
+          GestureDetector(
+	          onTap: () {
+              _showDialog(context);
+	          },
+            child: Container(
+              // nullになることはないはず
+              child: Image.network(_pokemon.sprites["front_default"]),
+          ),
+          ),
+        ],
       ),
+    );
+  }
+
+  void _showDialog(BuildContext context) {
+    showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: Dialog(
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Image.network(_pokemon.sprites["other"]["showdown"]["front_default"]),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
