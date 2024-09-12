@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_try_new_feature/dto/pokemon.dart';
 
@@ -14,10 +15,18 @@ class _PokemonDetailDescriptionPageState extends State<PokemonDetailDescriptionP
 
   late final Pokemon _pokemon;
 
+  List<String> _spritesList = [];
+
   @override
   void initState() {
     super.initState();
     _pokemon = widget.pokemon;
+
+    Map<String, dynamic> tmpPokemon = _pokemon.sprites as Map<String, dynamic>;
+    // nullであればブランク
+    _spritesList.add(tmpPokemon["front_default"] ?? "");
+    _spritesList.add(tmpPokemon["back_default"] ?? "");
+    _spritesList.add(tmpPokemon["other"]["showdown"]["front_default"] ?? "");
   }
 
   @override
@@ -47,23 +56,34 @@ class _PokemonDetailDescriptionPageState extends State<PokemonDetailDescriptionP
     );
   }
 
+  /// ポケモン画像のモーダル表示
   void _showDialog(BuildContext context) {
-    showDialog<void>(
+
+    showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (context) {
         return GestureDetector(
           onTap: () => Navigator.pop(context),
-          child: Dialog(
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Image.network(_pokemon.sprites["other"]["showdown"]["front_default"]),
-                ],
-              ),
+          child: CarouselSlider.builder(
+            options: CarouselOptions(
+              height: 100.0,
+              // 最初と最後のページ間の遷移
+              enableInfiniteScroll: false,
             ),
+            itemCount: _spritesList.length,
+            // TODO ポケモンのImageUrlリストを作成し、itemIndexごとに表示する
+            itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) {
+              print("${itemIndex} : ${pageViewIndex}");
+              return Container(
+                width: MediaQuery.of(context).size.width * 0.4,
+                margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                // color: Colors.red,
+                child: FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: Image.network(_spritesList[itemIndex]),
+                ),
+              );
+            }
           ),
         );
       },
