@@ -10,12 +10,11 @@ class PokemonGenerationListPage extends StatefulWidget {
   const PokemonGenerationListPage({super.key});
 
   @override
-  State<PokemonGenerationListPage> createState() => _PokemonGenerationListPageState();
+  State<PokemonGenerationListPage> createState() =>
+      _PokemonGenerationListPageState();
 }
 
-
 class _PokemonGenerationListPageState extends State<PokemonGenerationListPage> {
-
   CallPokeApi callPokeApi = CallPokeApi();
 
   // ChoiceChip(ゲームの世代)の要素数
@@ -34,7 +33,7 @@ class _PokemonGenerationListPageState extends State<PokemonGenerationListPage> {
   int? _selectedChoiceChipValue = 0;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
   }
 
@@ -42,20 +41,17 @@ class _PokemonGenerationListPageState extends State<PokemonGenerationListPage> {
   ///
   /// FutureBuilder の呼び出しで使用する
   Future<List> getDisplayPokemonData(int geneInt) async {
-
     // nullなら世代数をセット
     _choiceChipCount ??= await getGenerationApiUrl();
 
     // 世代ポケモンデータの取得
     return await getGenePokemonData(geneInt);
-
   }
 
   /// 世代データ取得APIのURL
   Future<int> getGenerationApiUrl() async {
-
     // 全世代ごとのAPI呼び出しURLを取得
-    var allGeneResponseJson  = await callPokeApi.getALLGenerationApiUrl();
+    var allGeneResponseJson = await callPokeApi.getALLGenerationApiUrl();
 
     // 世代APIをステートにセット
     // Listの要素数を世代数として管理
@@ -65,16 +61,14 @@ class _PokemonGenerationListPageState extends State<PokemonGenerationListPage> {
 
     // 世代数
     return allGeneResponseJson["count"];
-
   }
 
   /// 世代ごとのポケモンデータ取得
   Future<List> getGenePokemonData(int geneInt) async {
-
     String strGeneInt = geneInt.toString();
 
     // Mapに既存の世代ポケモンデータが存在しない場合は、取得処理を実行する
-    if(_selectedGenePokemonIdListMap[strGeneInt] == null){
+    if (_selectedGenePokemonIdListMap[strGeneInt] == null) {
       // 世代データ取得
       var allGene1 = await callPokeApi.getPokemonFromGeneration(strGeneInt);
       // 世代のポケモンidリスト
@@ -87,9 +81,10 @@ class _PokemonGenerationListPageState extends State<PokemonGenerationListPage> {
       tmpPokemonIdList.sort();
 
       // 世代マップとポケモンの紐付け
-      List<Pokemon> pokemonList= [];
-      for(int i in tmpPokemonIdList) {
-        Map<String, dynamic> resultPokemon = await callPokeApi.getPokemon(id: "${i}");
+      List<Pokemon> pokemonList = [];
+      for (int i in tmpPokemonIdList) {
+        Map<String, dynamic> resultPokemon =
+            await callPokeApi.getPokemon(id: "${i}");
         Pokemon p = Pokemon(resultPokemon);
         pokemonList.add(p);
         print(p.name);
@@ -139,7 +134,7 @@ class _PokemonGenerationListPageState extends State<PokemonGenerationListPage> {
             ),
           );
           // データの有無によりWidgetを切り替え
-          if(snapshot.connectionState == ConnectionState.done){
+          if (snapshot.connectionState == ConnectionState.done) {
             List<Pokemon> resultPokemonList = snapshot.data;
             children.add(
               // スクロールさせる
@@ -151,15 +146,18 @@ class _PokemonGenerationListPageState extends State<PokemonGenerationListPage> {
                   mainAxisSpacing: 10.0,
                   children: [
                     // ポケモンデータリスト
-                    for(Pokemon pokemon in resultPokemonList)
+                    for (Pokemon pokemon in resultPokemonList)
                       GestureDetector(
-	                      onTap: () {
-	                        GoRouter.of(context).go(ConstRoute.pokemonPictureBookDetailRoute, extra: pokemon);
-	                      },
+                        onTap: () {
+                          GoRouter.of(context).go(
+                              ConstRoute.pokemonPictureBookDetailRoute,
+                              extra: pokemon);
+                        },
                         child: Container(
                           // nullになることはないはず
-                          child: Image.network(pokemon.sprites!["front_default"]),
-                      ),
+                          child:
+                              Image.network(pokemon.sprites!["front_default"]),
+                        ),
                       ),
                   ],
                 ),
@@ -167,15 +165,13 @@ class _PokemonGenerationListPageState extends State<PokemonGenerationListPage> {
             );
           } else {
             // 読み込み中インジケーターを表示させる
-            children.add(
-              const Center(
-                child: SizedBox(
-                  width: 60,
-                  height: 60,
-                  child: CircularProgressIndicator(),
-                ),
-              )
-            );
+            children.add(const Center(
+              child: SizedBox(
+                width: 60,
+                height: 60,
+                child: CircularProgressIndicator(),
+              ),
+            ));
           }
           return Center(
             child: Column(
@@ -184,7 +180,6 @@ class _PokemonGenerationListPageState extends State<PokemonGenerationListPage> {
             ),
           );
         },
-
       ),
     );
   }

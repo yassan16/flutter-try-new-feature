@@ -8,11 +8,12 @@ class PokemonDetailDescriptionPage extends StatefulWidget {
   final Pokemon pokemon;
 
   @override
-  State<PokemonDetailDescriptionPage> createState() => _PokemonDetailDescriptionPageState();
+  State<PokemonDetailDescriptionPage> createState() =>
+      _PokemonDetailDescriptionPageState();
 }
 
-class _PokemonDetailDescriptionPageState extends State<PokemonDetailDescriptionPage> {
-
+class _PokemonDetailDescriptionPageState
+    extends State<PokemonDetailDescriptionPage> {
   late final Pokemon _pokemon;
 
   List<String> _spritesList = [];
@@ -43,13 +44,13 @@ class _PokemonDetailDescriptionPageState extends State<PokemonDetailDescriptionP
       body: Column(
         children: [
           GestureDetector(
-	          onTap: () {
+            onTap: () {
               _showDialog(context);
-	          },
+            },
             child: Container(
               // nullになることはないはず
               child: Image.network(_pokemon.sprites["front_default"]),
-          ),
+            ),
           ),
         ],
       ),
@@ -58,33 +59,32 @@ class _PokemonDetailDescriptionPageState extends State<PokemonDetailDescriptionP
 
   /// ポケモン画像のモーダル表示
   void _showDialog(BuildContext context) {
-
     showDialog(
       context: context,
       builder: (context) {
         return GestureDetector(
           onTap: () => Navigator.pop(context),
           child: CarouselSlider.builder(
-            options: CarouselOptions(
-              height: 100.0,
-              // 最初と最後のページ間の遷移
-              enableInfiniteScroll: false,
-            ),
-            itemCount: _spritesList.length,
-            // TODO ポケモンのImageUrlリストを作成し、itemIndexごとに表示する
-            itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) {
-              print("${itemIndex} : ${pageViewIndex}");
-              return Container(
-                width: MediaQuery.of(context).size.width * 0.4,
-                margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                // color: Colors.red,
-                child: FittedBox(
-                  fit: BoxFit.fitWidth,
-                  child: Image.network(_spritesList[itemIndex]),
-                ),
-              );
-            }
-          ),
+              options: CarouselOptions(
+                height: 100.0,
+                // 最初と最後のページ間の遷移
+                enableInfiniteScroll: false,
+              ),
+              itemCount: _spritesList.length,
+              // TODO ポケモンのImageUrlリストを作成し、itemIndexごとに表示する
+              itemBuilder:
+                  (BuildContext context, int itemIndex, int pageViewIndex) {
+                print("${itemIndex} : ${pageViewIndex}");
+                return Container(
+                  width: MediaQuery.of(context).size.width * 0.4,
+                  margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                  // color: Colors.red,
+                  child: FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: Image.network(_spritesList[itemIndex]),
+                  ),
+                );
+              }),
         );
       },
     );
