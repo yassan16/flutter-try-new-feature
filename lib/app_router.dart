@@ -3,6 +3,7 @@ import 'package:flutter_try_new_feature/constant/const_route.dart';
 import 'package:flutter_try_new_feature/dto/pokemon.dart';
 import 'package:flutter_try_new_feature/page/feature_list/feature_list_page.dart';
 import 'package:flutter_try_new_feature/main.dart';
+import 'package:flutter_try_new_feature/page/feature_list/flame_action_2d_character/start_2d_character.dart';
 import 'package:flutter_try_new_feature/page/feature_list/flutter_map/flutter_map_page.dart';
 import 'package:flutter_try_new_feature/page/feature_list/get_current_location/get_currentLocation_page.dart';
 import 'package:flutter_try_new_feature/page/feature_list/input_form_list/input_form_list_page.dart';
@@ -61,6 +62,11 @@ final GlobalKey<NavigatorState> _sectionANavigatorKey =
                     path: ConstRoute.useGeolocatorRoute,
                     builder: (BuildContext context, GoRouterState state) =>
                         const GetCurrentLocationPage(),
+                  ),
+                  GoRoute(
+                    path: ConstRoute.start2dCharacterRoute,
+                    builder: (BuildContext context, GoRouterState state) =>
+                        const Start2dCharacter(),
                   ),
                 ],
               ),

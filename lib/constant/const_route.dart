@@ -9,6 +9,8 @@ class ConstRoute {
   static const String useFlutterMapRoute = "use_flutterMap";
   // 現在地取得
   static const String useGeolocatorRoute = "use_geolocator";
+  // 2dキャラクターの移動
+  static const String start2dCharacterRoute = "start2dCharacterRoute";
 
   // ポケモン図鑑 リスト表示Top
   static const String pokemonPictureBookRoute = "/pokemon_picturebook";

@@ -43,6 +43,12 @@ class FeatureListPage extends StatelessWidget {
             subtitle: "geolocatorで現在地を取得する",
             routePath: "${ConstRoute.featureListRoute}/${ConstRoute.useGeolocatorRoute}",
           ),
+          _menuItem(context,
+            titleIcon: Icon(Icons.sports_esports,),
+            mainTitle: "2Dキャラクター移動",
+            subtitle: "Flameを使用してキャラクター移動させる",
+            routePath: "${ConstRoute.featureListRoute}/${ConstRoute.start2dCharacterRoute}",
+          ),
         ],
       ),
 
