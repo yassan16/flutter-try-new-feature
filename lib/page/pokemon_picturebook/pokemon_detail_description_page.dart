@@ -16,7 +16,9 @@ class _PokemonDetailDescriptionPageState
     extends State<PokemonDetailDescriptionPage> {
   late final Pokemon _pokemon;
 
-  List<String> _spritesList = [];
+  final List<String> _spritesList = [];
+
+  int _currentCarouselSliderIndex = 0;
 
   @override
   void initState() {
@@ -60,33 +62,61 @@ class _PokemonDetailDescriptionPageState
   /// ポケモン画像のモーダル表示
   void _showDialog(BuildContext context) {
     showDialog(
-      context: context,
-      builder: (context) {
-        return GestureDetector(
-          onTap: () => Navigator.pop(context),
-          child: CarouselSlider.builder(
-              options: CarouselOptions(
-                height: 100.0,
-                // 最初と最後のページ間の遷移
-                enableInfiniteScroll: false,
-              ),
-              itemCount: _spritesList.length,
-              // TODO ポケモンのImageUrlリストを作成し、itemIndexごとに表示する
-              itemBuilder:
-                  (BuildContext context, int itemIndex, int pageViewIndex) {
-                print("${itemIndex} : ${pageViewIndex}");
-                return Container(
-                  width: MediaQuery.of(context).size.width * 0.4,
-                  margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                  // color: Colors.red,
-                  child: FittedBox(
-                    fit: BoxFit.fitWidth,
-                    child: Image.network(_spritesList[itemIndex]),
-                  ),
-                );
-              }),
-        );
-      },
-    );
+        context: context,
+        builder: (BuildContext context) {
+          // widget treeの管理下におく
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+            return GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // ポケモン画像のスライド
+                    CarouselSlider.builder(
+                        options: CarouselOptions(
+                            // height: 500.0,
+                            // 最初と最後のページ間の遷移
+                            enableInfiniteScroll: false,
+                            onPageChanged: (index, reason) {
+                              setState(() {
+                                _currentCarouselSliderIndex = index;
+                              });
+                            }),
+                        itemCount: _spritesList.length,
+                        itemBuilder: (BuildContext context, int itemIndex,
+                            int pageViewIndex) {
+                          return Container(
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            // アスペクト比を保持しながら、親ウィジェットのサイズに収める
+                            child: FittedBox(
+                              fit: BoxFit.contain,
+                              child: Image.network(_spritesList[itemIndex]),
+                            ),
+                          );
+                        }),
+                    // インジケータ表示 現在のインデックスを黒丸で表現
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: _spritesList.map((url) {
+                        int index = _spritesList.indexOf(url);
+                        return Container(
+                          width: 8.0,
+                          height: 8.0,
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 2.0),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: _currentCarouselSliderIndex == index
+                                ? Color.fromRGBO(0, 0, 0, 0.9)
+                                : Color.fromRGBO(0, 0, 0, 0.4),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                ));
+          });
+        });
   }
 }

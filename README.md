@@ -23,3 +23,10 @@ Flutter Mapを実際に触って、地図機能を試します。
 
 ### GeoLocation
 現在地の緯度経度を取得します。
+
+### ポケモン図鑑
+PokeAPIを用いてポケモン図鑑を実装しています。
+
+#### 参考サイト
+* [PokéAPI](https://pokeapi.co/docs/v2)
+* [インジケータつきのカルーセルスライダー/Carousel Slider with Indicator 【Flutter】](https://ticktickboom.hatenablog.com/entry/2021/03/21/131017)
