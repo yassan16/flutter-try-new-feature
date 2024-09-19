@@ -1,10 +1,10 @@
 import 'dart:convert';
 
+import 'package:flutter_try_new_feature/dto/pokemon_species.dart';
 import 'package:http/http.dart' as http;
 
 /// pokeAPIを呼び出すためのクラス
 class CallPokeApi {
-
   /// ポケモンの取得
   ///
   /// https://pokeapi.co/docs/v2#pokemon
@@ -13,6 +13,16 @@ class CallPokeApi {
     var response = await http.get(url);
     var responseJson = jsonDecode(response.body) as Map<String, dynamic>;
     return responseJson;
+  }
+
+  /// ポケモンspeciesの取得
+  ///
+  /// https://pokeapi.co/docs/v2#pokemon-species
+  Future<PokemonSpecies> getPokemonSpecies({required String id}) async {
+    var url = Uri.https("pokeapi.co", "/api/v2/pokemon-species/${id}/");
+    var response = await http.get(url);
+    var responseJson = jsonDecode(response.body) as Map<String, dynamic>;
+    return PokemonSpecies(responseJson);
   }
 
   /// 全世代の世代取得APIのURL取得
@@ -36,5 +46,4 @@ class CallPokeApi {
     var responseJson = jsonDecode(response.body) as Map<String, dynamic>;
     return responseJson;
   }
-
 }

@@ -1,6 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_try_new_feature/dto/pokemon.dart';
+import 'package:flutter_try_new_feature/dto/pokemon_species.dart';
+import 'package:flutter_try_new_feature/model/call_pokemon_api.dart';
 
 class PokemonDetailDescriptionPage extends StatefulWidget {
   const PokemonDetailDescriptionPage({required this.pokemon, super.key});
@@ -14,15 +16,19 @@ class PokemonDetailDescriptionPage extends StatefulWidget {
 
 class _PokemonDetailDescriptionPageState
     extends State<PokemonDetailDescriptionPage> {
+  // ポケモンのベース情報
   late final Pokemon _pokemon;
-
+  // ポケモン画像
   final List<String> _spritesList = [];
-
+  // モーダル画面にて選択中のindex
   int _currentCarouselSliderIndex = 0;
+
+  late Future<PokemonSpecies> _pokemonSpeciesFuture;
 
   @override
   void initState() {
     super.initState();
+
     _pokemon = widget.pokemon;
 
     Map<String, dynamic> tmpPokemon = _pokemon.sprites as Map<String, dynamic>;
@@ -30,24 +36,51 @@ class _PokemonDetailDescriptionPageState
     _spritesList.add(tmpPokemon["front_default"] ?? "");
     _spritesList.add(tmpPokemon["back_default"] ?? "");
     _spritesList.add(tmpPokemon["other"]["showdown"]["front_default"] ?? "");
+
+    // ポケモンサブ情報を取得
+    _pokemonSpeciesFuture = getPokemonSubInfo();
+  }
+
+  /// ポケモンサブ情報取得
+  Future<PokemonSpecies> getPokemonSubInfo() async {
+    return await CallPokeApi().getPokemonSpecies(id: "${_pokemon.id}");
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "ポケモン詳細情報",
-          style: TextStyle(
-            color: Colors.white,
-          ),
-        ),
+        title: FutureBuilder(
+            future: _pokemonSpeciesFuture,
+            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.hasData) {
+                  PokemonSpecies species = snapshot.data;
+                  return Column(
+                    children: [
+                      Text(
+                        "No.${species.id}",
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      Text(
+                        "${species.genera[0]["genus"]}",
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  );
+                } else {
+                  return const Text("noData");
+                }
+              } else {
+                return const Text("読み込み中...");
+              }
+            }),
       ),
       body: Column(
         children: [
           GestureDetector(
             onTap: () {
-              _showDialog(context);
+              _showDialogPokemonPicture(context);
             },
             child: Container(
               // nullになることはないはず
@@ -60,7 +93,7 @@ class _PokemonDetailDescriptionPageState
   }
 
   /// ポケモン画像のモーダル表示
-  void _showDialog(BuildContext context) {
+  void _showDialogPokemonPicture(BuildContext context) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
