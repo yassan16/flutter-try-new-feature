@@ -56,13 +56,17 @@ class _PokemonDetailDescriptionPageState
               if (snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.hasData) {
                   PokemonSpecies species = snapshot.data;
-                  return Column(
+                  return Row(
                     children: [
                       Text(
                         "No.${species.id}",
                         style: const TextStyle(color: Colors.white),
                       ),
+                      const SizedBox(
+                        width: 20,
+                      ),
                       Text(
+                        // 分類
                         "${species.genera[0]["genus"]}",
                         style: const TextStyle(color: Colors.white),
                       ),
@@ -78,14 +82,46 @@ class _PokemonDetailDescriptionPageState
       ),
       body: Column(
         children: [
-          GestureDetector(
-            onTap: () {
-              _showDialogPokemonPicture(context);
-            },
-            child: Container(
-              // nullになることはないはず
-              child: Image.network(_pokemon.sprites["front_default"]),
-            ),
+          // ポケモン名と画像、タイプ、種族値
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              // ポケモン名と画像
+              Container(
+                child: Column(children: [
+                  // 名前
+                  Container(
+                    height: 100,
+                    // padding: EdgeInsets.only(top: 10),
+                    alignment: Alignment.center,
+                    child: Text(
+                      _pokemon.name,
+                      style: const TextStyle(fontSize: 30),
+                    ),
+                    // color: Colors.red,
+                  ),
+                  // 画像
+                  GestureDetector(
+                    onTap: () {
+                      _showDialogPokemonPicture(context);
+                    },
+                    child: Container(
+                      // nullになることはないはず
+                      child: Image.network(_pokemon.sprites["front_default"]),
+                    ),
+                  ),
+                ]),
+              ),
+              // タイプと種族値
+              // for (Map<String, dynamic> typeMap in _pokemon.types)
+              //   Container(
+              //     height: 100,
+              //     width: 100,
+              //     // TODO タイプのMap数だけループさせる
+              //     child: Text(typeMap["type"]["name"]),
+              //   ),
+              // TODO ステータス（種族値）だけループさせる
+            ],
           ),
         ],
       ),

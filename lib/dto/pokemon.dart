@@ -1,4 +1,4 @@
-class Pokemon{
+class Pokemon {
   // id
   late int id;
   // このポケモンの名前
@@ -40,7 +40,7 @@ class Pokemon{
   // このポケモンのタイプを示す詳細リスト
   late List types;
 
-  Pokemon(Map<String, dynamic> json){
+  Pokemon(Map<String, dynamic> json) {
     id = json["id"]!;
     name = json["name"]!;
     baseExperience = json["base_experience"]!;
