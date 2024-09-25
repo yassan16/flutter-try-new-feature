@@ -49,83 +49,128 @@ class _PokemonDetailDescriptionPageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: FutureBuilder(
-            future: _pokemonSpeciesFuture,
-            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                if (snapshot.hasData) {
-                  PokemonSpecies species = snapshot.data;
-                  return Row(
-                    children: [
-                      Text(
-                        "No.${species.id}",
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                      Text(
-                        // 分類
-                        "${species.genera[0]["genus"]}",
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                    ],
-                  );
+        appBar: AppBar(
+          title: FutureBuilder(
+              future: _pokemonSpeciesFuture,
+              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.hasData) {
+                    PokemonSpecies species = snapshot.data;
+                    return Row(
+                      children: [
+                        Text(
+                          "No.${species.id}",
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        Text(
+                          // 分類
+                          "${species.genera[0]["genus"]}",
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ],
+                    );
+                  } else {
+                    return const Text("noData");
+                  }
                 } else {
-                  return const Text("noData");
+                  return const Text("読み込み中...");
                 }
-              } else {
-                return const Text("読み込み中...");
-              }
-            }),
-      ),
-      body: Column(
-        children: [
-          // ポケモン名と画像、タイプ、種族値
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              }),
+        ),
+        body: SingleChildScrollView(
+          child: Column(
             children: [
-              // ポケモン名と画像
-              Container(
-                child: Column(children: [
-                  // 名前
+              // ポケモン名と画像、タイプ、種族値
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // ポケモン名と画像
                   Container(
-                    height: 100,
-                    // padding: EdgeInsets.only(top: 10),
-                    alignment: Alignment.center,
-                    child: Text(
-                      _pokemon.name,
-                      style: const TextStyle(fontSize: 30),
-                    ),
-                    // color: Colors.red,
+                    height: MediaQuery.of(context).size.height * 0.3,
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    child: Column(children: [
+                      // 名前
+                      Container(
+                        // padding: EdgeInsets.only(top: 10),
+                        alignment: Alignment.center,
+                        child: Text(
+                          _pokemon.name,
+                          style: const TextStyle(fontSize: 25),
+                        ),
+                      ),
+                      // 画像
+                      GestureDetector(
+                        onTap: () {
+                          _showDialogPokemonPicture(context);
+                        },
+                        child: Container(
+                          // nullになることはないはず
+                          child: Image.network(
+                            _pokemon.sprites["front_default"],
+                            width: MediaQuery.of(context).size.width * 0.5,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ]),
                   ),
-                  // 画像
-                  GestureDetector(
-                    onTap: () {
-                      _showDialogPokemonPicture(context);
-                    },
-                    child: Container(
-                      // nullになることはないはず
-                      child: Image.network(_pokemon.sprites["front_default"]),
-                    ),
-                  ),
-                ]),
+                  // タイプと種族値
+                  Container(
+                      height: MediaQuery.of(context).size.height * 0.3,
+                      width: MediaQuery.of(context).size.width * 0.45,
+                      child: Column(
+                        children: [
+                          // タイプ
+                          Row(
+                            children: [
+                              for (Map<String, dynamic> typeMap
+                                  in _pokemon.types)
+                                Container(
+                                  // color: Colors.red,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.2,
+                                  child: Text(typeMap["type"]["name"]),
+                                ),
+                            ],
+                          ),
+                          // 余白
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.05,
+                          ),
+                          // 種族値
+                          for (Map<String, dynamic> statMap in _pokemon.stats)
+                            Row(
+                              children: [
+                                Text(statMap["stat"]["name"]),
+                                SizedBox(
+                                  width: 15,
+                                ),
+                                Text("${statMap["base_stat"]}"),
+                              ],
+                            ),
+                          Row(
+                            children: [
+                              Text("Total"),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              Text("${_pokemon.getTotalStats()}"),
+                            ],
+                          )
+                        ],
+                      ))
+                ],
               ),
-              // タイプと種族値
-              // for (Map<String, dynamic> typeMap in _pokemon.types)
-              //   Container(
-              //     height: 100,
-              //     width: 100,
-              //     // TODO タイプのMap数だけループさせる
-              //     child: Text(typeMap["type"]["name"]),
-              //   ),
-              // TODO ステータス（種族値）だけループさせる
+              for (Map<String, dynamic> moveMap in _pokemon.moves)
+                Row(
+                  children: [Text(moveMap["move"]["name"])],
+                ),
             ],
           ),
-        ],
-      ),
-    );
+        ));
   }
 
   /// ポケモン画像のモーダル表示
