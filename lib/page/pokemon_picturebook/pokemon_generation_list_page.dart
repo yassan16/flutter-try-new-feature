@@ -104,6 +104,8 @@ class _PokemonGenerationListPageState extends State<PokemonGenerationListPage> {
     return pokemonList;
   }
 
+  // 世代数の選択リスト→ポケモンリストの順で取得
+  // futureからfutureをネストして対応
   @override
   Widget build(BuildContext context) {
     return Scaffold(

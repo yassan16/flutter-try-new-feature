@@ -89,6 +89,7 @@ class _PokemonDetailDescriptionPageState
                 children: [
                   // ポケモン名と画像
                   Container(
+                    // color: Colors.red,
                     height: MediaQuery.of(context).size.height * 0.3,
                     width: MediaQuery.of(context).size.width * 0.5,
                     child: Column(children: [
@@ -114,6 +115,16 @@ class _PokemonDetailDescriptionPageState
                             fit: BoxFit.cover,
                           ),
                         ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text("高さ: ${_pokemon.getHeightFromDmToM()}m"),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text("重さ: ${_pokemon.getWeightFromHgToKg()}kg"),
+                        ],
                       ),
                     ]),
                   ),

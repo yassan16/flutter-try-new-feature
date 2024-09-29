@@ -79,4 +79,18 @@ class Pokemon {
     }
     return resultTotalStats;
   }
+
+  /// Heightをメートル(m)変換
+  ///
+  /// 小数点2桁で四捨五入後、デシメートル(1dm)からメートル(0.1m)に変換する
+  double getHeightFromDmToM() {
+    return (height * 100).round() / 100 / 10;
+  }
+
+  /// Weightをメートル(m)変換
+  ///
+  /// 小数点2桁で切り捨て、デシメートル(1dm)からメートル(0.1m)に変換する
+  double getWeightFromHgToKg() {
+    return (weight * 100).round() / 100 / 10;
+  }
 }
