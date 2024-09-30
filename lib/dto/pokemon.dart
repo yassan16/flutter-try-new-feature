@@ -87,10 +87,18 @@ class Pokemon {
     return (height * 100).round() / 100 / 10;
   }
 
-  /// Weightをメートル(m)変換
+  /// Weightをキログラム(kg)変換
   ///
-  /// 小数点2桁で切り捨て、デシメートル(1dm)からメートル(0.1m)に変換する
+  /// 小数点2桁で四捨五入後、ヘクトグラム(1hg)からキログラム(0.1kg)に変換する
   double getWeightFromHgToKg() {
     return (weight * 100).round() / 100 / 10;
+  }
+
+  /// ステータス(種族値)バーの割合計算
+  ///
+  /// 160pxを100%として、ポケモンの種族値を割合で表示する
+  double getStatRate(int stat) {
+    double result = (stat / 160 * 100).round() / 100;
+    return (result <= 1) ? result : 1;
   }
 }

@@ -82,6 +82,7 @@ class _PokemonDetailDescriptionPageState
         ),
         body: SingleChildScrollView(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               // ポケモン名と画像、タイプ、種族値
               Row(
@@ -90,7 +91,7 @@ class _PokemonDetailDescriptionPageState
                   // ポケモン名と画像
                   Container(
                     // color: Colors.red,
-                    height: MediaQuery.of(context).size.height * 0.3,
+                    height: MediaQuery.of(context).size.height * 0.35,
                     width: MediaQuery.of(context).size.width * 0.5,
                     child: Column(children: [
                       // 名前
@@ -130,7 +131,7 @@ class _PokemonDetailDescriptionPageState
                   ),
                   // タイプと種族値
                   Container(
-                      height: MediaQuery.of(context).size.height * 0.3,
+                      height: MediaQuery.of(context).size.height * 0.35,
                       width: MediaQuery.of(context).size.width * 0.45,
                       child: Column(
                         children: [
@@ -153,15 +154,31 @@ class _PokemonDetailDescriptionPageState
                           ),
                           // 種族値
                           for (Map<String, dynamic> statMap in _pokemon.stats)
-                            Row(
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(statMap["stat"]["name"]),
-                                SizedBox(
-                                  width: 15,
+                                // ステータス名と数値
+                                Row(
+                                  children: [
+                                    Text(statMap["stat"]["name"]),
+                                    const SizedBox(
+                                      width: 15,
+                                    ),
+                                    Text("${statMap["base_stat"]}"),
+                                  ],
                                 ),
-                                Text("${statMap["base_stat"]}"),
+                                // ステータスバー
+                                Container(
+                                  width: MediaQuery.of(context).size.width *
+                                      0.4 *
+                                      _pokemon
+                                          .getStatRate(statMap["base_stat"]),
+                                  height: 10,
+                                  color: Colors.lightGreen,
+                                )
                               ],
                             ),
+
                           Row(
                             children: [
                               Text("Total"),
