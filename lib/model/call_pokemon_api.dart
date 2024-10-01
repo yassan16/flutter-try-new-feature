@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_try_new_feature/dto/move.dart';
 import 'package:flutter_try_new_feature/dto/pokemon_species.dart';
 import 'package:http/http.dart' as http;
 
@@ -45,5 +46,15 @@ class CallPokeApi {
     var response = await http.get(url);
     var responseJson = jsonDecode(response.body) as Map<String, dynamic>;
     return responseJson;
+  }
+
+  /// 技の取得
+  ///
+  /// https://pokeapi.co/api/v2/move/{id or name}/
+  Future<Move> getMove({required String id}) async {
+    var url = Uri.https("pokeapi.co", "/api/v2/move/$id/");
+    var response = await http.get(url);
+    var responseJson = jsonDecode(response.body) as Map<String, dynamic>;
+    return Move(responseJson);
   }
 }

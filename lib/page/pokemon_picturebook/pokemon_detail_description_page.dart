@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_try_new_feature/dto/move.dart';
 import 'package:flutter_try_new_feature/dto/pokemon.dart';
 import 'package:flutter_try_new_feature/dto/pokemon_species.dart';
 import 'package:flutter_try_new_feature/model/call_pokemon_api.dart';
@@ -24,6 +25,7 @@ class _PokemonDetailDescriptionPageState
   int _currentCarouselSliderIndex = 0;
 
   late Future<PokemonSpecies> _pokemonSpeciesFuture;
+  late Future<List<Move>> _movesList;
 
   @override
   void initState() {
@@ -39,11 +41,30 @@ class _PokemonDetailDescriptionPageState
 
     // ポケモンサブ情報を取得
     _pokemonSpeciesFuture = getPokemonSubInfo();
+
+    // 技リストを取得
+    _movesList = getMovesList();
   }
 
   /// ポケモンサブ情報取得
   Future<PokemonSpecies> getPokemonSubInfo() async {
     return await CallPokeApi().getPokemonSpecies(id: "${_pokemon.id}");
+  }
+
+  /// 技リスト取得
+  Future<List<Move>> getMovesList() async {
+    List<String> tmpMoveUrlList = _pokemon.moves
+        .map((moveMap) => moveMap["move"]["url"] as String)
+        .toList();
+
+    List<Move> resultList = [];
+    for (String urlStr in tmpMoveUrlList) {
+      List<String> tmpList = urlStr.split("/");
+      resultList
+          .add(await CallPokeApi().getMove(id: tmpList[tmpList.length - 2]));
+      print("${tmpList[tmpList.length - 2]}");
+    }
+    return resultList;
   }
 
   @override
@@ -192,10 +213,42 @@ class _PokemonDetailDescriptionPageState
                       ))
                 ],
               ),
-              for (Map<String, dynamic> moveMap in _pokemon.moves)
-                Row(
-                  children: [Text(moveMap["move"]["name"])],
-                ),
+              FutureBuilder(
+                  future: _movesList,
+                  builder:
+                      (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      List<Move> tmpMoveList = snapshot.data;
+                      List<Widget> moveWidgetList = [];
+                      for (Move move in tmpMoveList) {
+                        moveWidgetList.add(Row(
+                          children: [
+                            Text(move.names[0]["name"]),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Text(move.type["name"]),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Text((move.power != null) ? "${move.power!}" : "-")
+                          ],
+                        ));
+                      }
+                      return Column(
+                        children: moveWidgetList,
+                      );
+                    } else {
+                      // 読み込み中インジケーターを表示させる
+                      return const Center(
+                        child: SizedBox(
+                          width: 60,
+                          height: 60,
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                    }
+                  }),
             ],
           ),
         ));
