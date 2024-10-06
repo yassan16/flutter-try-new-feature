@@ -14,6 +14,7 @@ class Move {
   late Map<String, dynamic>? contestCombos;
   late Map<String, dynamic>? contestType;
   late Map<String, dynamic>? contestEffect;
+  // 技のダメージ種類(物理、特殊など)
   late Map<String, dynamic> damageClass;
   late List effectEntries;
   late List effectChanges;

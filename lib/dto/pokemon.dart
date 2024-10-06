@@ -1,3 +1,5 @@
+import 'package:flutter_try_new_feature/dto/move.dart';
+
 class Pokemon {
   // id
   late int id;
@@ -100,5 +102,21 @@ class Pokemon {
   double getStatRate(int stat) {
     double result = (stat / 160 * 100).round() / 100;
     return (result <= 1) ? result : 1;
+  }
+
+  /// ポケモンのレベルアップ習得技のレベル取得
+  int getLevel(Move move) {
+    for (var pokeMove in moves) {
+      String urlStr = pokeMove["move"]["url"];
+      List<String> tmpUrlList = urlStr.split("/");
+      String moveId = tmpUrlList[tmpUrlList.length - 2];
+
+      if (int.parse(moveId) == move.id) {
+        List moveDetailList = pokeMove["version_group_details"];
+        var moveDetail = moveDetailList[moveDetailList.length - 1];
+        return moveDetail["level_learned_at"];
+      }
+    }
+    return 0;
   }
 }
