@@ -113,6 +113,7 @@ class Pokemon {
 
       if (int.parse(moveId) == move.id) {
         List moveDetailList = pokeMove["version_group_details"];
+        // TODO Lvupで覚える技とわざマシンで覚える技が同じ場合、Lvが0(わざマシン)が表示されてしまう
         var moveDetail = moveDetailList[moveDetailList.length - 1];
         return moveDetail["level_learned_at"];
       }
